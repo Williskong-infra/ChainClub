@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  username  String?  @unique
+  firstName String?
+  lastName  String?
+  avatar    String?
+  bio       String?  @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  wallet    Wallet?
+  nfts      NFT[]
+  sessions  Session[]
+
+  @@map("users")
+}
+
+model Wallet {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  address     String   @unique
+  encryptedPrivateKey String
+  balance     String   @default("0")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("wallets")
+}
+
+model NFT {
+  id          String   @id @default(uuid())
+  userId      String
+  tokenId     String   @unique
+  name        String
+  description String?  @db.Text
+  imageUrl    String?
+  metadataUrl String?
+  contractAddress String
+  network     String   @default("sepolia")
+  isMinted    Boolean  @default(false)
+  mintedAt    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("nfts")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}

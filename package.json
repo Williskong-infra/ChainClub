@@ -1,0 +1,19 @@
+{
+  "name": "chainclub",
+  "version": "1.0.0",
+  "description": "Web3 membership platform with NFT member cards",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": ["web3", "nft", "membership", "ethereum", "react", "nodejs"],
+  "author": "ChainClub Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
