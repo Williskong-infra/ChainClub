@@ -8,7 +8,15 @@ import {
   ArrowRightOnRectangleIcon,
   PlusIcon,
   CurrencyDollarIcon,
-  CubeIcon
+  CubeIcon,
+  UsersIcon,
+  BellIcon,
+  ChartBarIcon,
+  TrophyIcon,
+  StarIcon,
+  HeartIcon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +24,8 @@ import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
   const { user, wallet, nfts, logout, loading } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState('overview');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!user && !loading) {
@@ -31,8 +40,8 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -42,66 +51,206 @@ const Dashboard = () => {
   }
 
   const tabs = [
+    { id: 'overview', name: 'Overview', icon: ChartBarIcon },
     { id: 'profile', name: 'Profile', icon: UserIcon },
     { id: 'wallet', name: 'Wallet', icon: WalletIcon },
     { id: 'nfts', name: 'NFTs', icon: RectangleStackIcon },
+    { id: 'community', name: 'Community', icon: UsersIcon },
     { id: 'settings', name: 'Settings', icon: CogIcon }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <motion.header 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="bg-white/10 backdrop-blur-lg border-b border-white/20"
+        className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
-              <div className="h-10 w-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <CubeIcon className="h-6 w-6 text-white" />
+              <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <CubeIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white">ChainClub</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">ChainClub</h1>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
-            >
-              <ArrowRightOnRectangleIcon className="h-5 w-5" />
-              <span>Logout</span>
-            </button>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-4">
+              <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                <BellIcon className="h-6 w-6" />
+              </button>
+              <div className="flex items-center space-x-3">
+                <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {user.firstName ? user.firstName[0] : user.email[0].toUpperCase()}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                >
+                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden flex items-center space-x-2">
+              <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                <BellIcon className="h-6 w-6" />
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {mobileMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Navigation */}
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-gray-200 py-4"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                      {user.firstName ? user.firstName[0] : user.email[0].toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {user.firstName} {user.lastName}
+                    </p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
+                >
+                  <ArrowRightOnRectangleIcon className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
         </div>
       </motion.header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Welcome Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <h2 className="text-3xl font-bold text-white mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Welcome back, {user.firstName || user.email}!
           </h2>
-          <p className="text-gray-300">Manage your Web3 membership and NFTs</p>
+          <p className="text-gray-600 text-sm sm:text-base">Manage your Web3 membership and community</p>
         </motion.div>
 
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+          >
+            <div className="flex items-center">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <WalletIcon className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+              </div>
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Wallet Balance</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">
+                  {parseFloat(wallet?.balance || 0).toFixed(4)} ETH
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+          >
+            <div className="flex items-center">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <RectangleStackIcon className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
+              </div>
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">NFTs Owned</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{nfts?.length || 0}</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+          >
+            <div className="flex items-center">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <TrophyIcon className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
+              </div>
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Member Level</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">Level 1</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+          >
+            <div className="flex items-center">
+              <div className="p-2 bg-yellow-100 rounded-lg">
+                <StarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-600" />
+              </div>
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Community Points</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">1,250</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
         {/* Tab Navigation */}
-        <div className="mb-8">
-          <nav className="flex space-x-1 bg-white/10 backdrop-blur-lg rounded-lg p-1">
+        <div className="mb-6 sm:mb-8">
+          {/* Desktop Tab Navigation */}
+          <nav className="hidden md:flex space-x-1 bg-white rounded-xl p-1 shadow-sm border border-gray-200">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                     activeTab === tab.id
-                      ? 'bg-white/20 text-white'
-                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      ? 'bg-blue-500 text-white shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   <Icon className="h-5 w-5" />
@@ -110,6 +259,21 @@ const Dashboard = () => {
               );
             })}
           </nav>
+
+          {/* Mobile Tab Navigation */}
+          <div className="md:hidden">
+            <select
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value)}
+              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {tabs.map((tab) => (
+                <option key={tab.id} value={tab.id}>
+                  {tab.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Tab Content */}
@@ -118,34 +282,125 @@ const Dashboard = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-white/10 backdrop-blur-lg rounded-lg p-6"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6"
         >
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Dashboard Overview</h3>
+                <button className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors w-full sm:w-auto">
+                  <PlusIcon className="h-5 w-5" />
+                  <span>Mint NFT</span>
+                </button>
+              </div>
+
+              {/* Recent Activity */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Recent Activity</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <HeartIcon className="h-4 w-4 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">NFT Minted</p>
+                        <p className="text-xs text-gray-500">2 hours ago</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <UsersIcon className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Joined Community</p>
+                        <p className="text-xs text-gray-500">1 day ago</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Quick Actions</h4>
+                  <div className="space-y-3">
+                    <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
+                      <div className="flex items-center space-x-3">
+                        <WalletIcon className="h-5 w-5 text-blue-600" />
+                        <span className="text-sm font-medium text-gray-900">View Wallet</span>
+                      </div>
+                    </button>
+                    <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-purple-300 transition-colors">
+                      <div className="flex items-center space-x-3">
+                        <RectangleStackIcon className="h-5 w-5 text-purple-600" />
+                        <span className="text-sm font-medium text-gray-900">My NFTs</span>
+                      </div>
+                    </button>
+                    <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-green-300 transition-colors">
+                      <div className="flex items-center space-x-3">
+                        <UsersIcon className="h-5 w-5 text-green-600" />
+                        <span className="text-sm font-medium text-gray-900">Community</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'profile' && (
             <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                  <UserIcon className="h-8 w-8 text-white" />
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <div className="h-16 w-16 sm:h-20 sm:w-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto sm:mx-0">
+                  <span className="text-white text-xl sm:text-2xl font-bold">
+                    {user.firstName ? user.firstName[0] : user.email[0].toUpperCase()}
+                  </span>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">
+                <div className="text-center sm:text-left">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
                     {user.firstName} {user.lastName}
                   </h3>
-                  <p className="text-gray-300">{user.email}</p>
+                  <p className="text-gray-600 text-sm sm:text-base">{user.email}</p>
+                  <p className="text-xs sm:text-sm text-gray-500">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-medium mb-2">Member Since</h4>
-                  <p className="text-gray-300">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Profile Information</h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">First Name</label>
+                      <p className="text-gray-900">{user.firstName || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                      <p className="text-gray-900">{user.lastName || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Email</label>
+                      <p className="text-gray-900 break-all">{user.email}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-medium mb-2">Status</h4>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Active Member
-                  </span>
+                
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Account Status</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Status</span>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Active
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Member Level</span>
+                      <span className="text-sm font-medium text-gray-900">Level 1</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">NFTs Owned</span>
+                      <span className="text-sm font-medium text-gray-900">{nfts?.length || 0}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -153,37 +408,43 @@ const Dashboard = () => {
 
           {activeTab === 'wallet' && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold text-white">Your Wallet</h3>
-                <div className="flex items-center space-x-2 text-green-400">
-                  <div className="h-2 w-2 bg-green-400 rounded-full"></div>
-                  <span className="text-sm">Connected</span>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Your Wallet</h3>
+                <div className="flex items-center space-x-2 text-green-600">
+                  <div className="h-2 w-2 bg-green-600 rounded-full"></div>
+                  <span className="text-sm font-medium">Connected</span>
                 </div>
               </div>
 
               {wallet ? (
-                <div className="space-y-4">
-                  <div className="bg-white/5 rounded-lg p-4">
-                    <h4 className="text-white font-medium mb-2">Wallet Address</h4>
-                    <p className="text-gray-300 font-mono text-sm break-all">
-                      {wallet.address}
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white/5 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-white font-medium">Balance</h4>
-                      <CurrencyDollarIcon className="h-5 w-5 text-green-400" />
+                <div className="space-y-6">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-4 sm:p-6 text-white">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-base sm:text-lg font-medium">Wallet Balance</h4>
+                      <CurrencyDollarIcon className="h-6 w-6" />
                     </div>
-                    <p className="text-2xl font-bold text-green-400">
+                    <p className="text-2xl sm:text-3xl font-bold mb-2">
                       {parseFloat(wallet.balance || 0).toFixed(4)} ETH
                     </p>
+                    <p className="text-blue-100 text-sm">≈ $0.00 USD</p>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                    <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Wallet Address</h4>
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                      <p className="font-mono text-xs sm:text-sm text-gray-600 break-all">
+                        {wallet.address}
+                      </p>
+                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium self-start sm:self-auto">
+                        Copy
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-8">
+                <div className="text-center py-12">
                   <WalletIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-300">No wallet found</p>
+                  <p className="text-gray-500">No wallet found</p>
                 </div>
               )}
             </div>
@@ -191,25 +452,25 @@ const Dashboard = () => {
 
           {activeTab === 'nfts' && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold text-white">Your NFTs</h3>
-                <button className="flex items-center space-x-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Your NFTs</h3>
+                <button className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors w-full sm:w-auto">
                   <PlusIcon className="h-5 w-5" />
                   <span>Mint NFT</span>
                 </button>
               </div>
 
               {nfts && nfts.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {nfts.map((nft) => (
-                    <div key={nft.id} className="bg-white/5 rounded-lg p-4">
-                      <div className="h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mb-4 flex items-center justify-center">
-                        <RectangleStackIcon className="h-12 w-12 text-white" />
+                    <div key={nft.id} className="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                      <div className="h-24 sm:h-32 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mb-4 flex items-center justify-center">
+                        <RectangleStackIcon className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
                       </div>
-                      <h4 className="text-white font-medium mb-2">{nft.name}</h4>
-                      <p className="text-gray-300 text-sm mb-2">{nft.description}</p>
+                      <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-2">{nft.name}</h4>
+                      <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-2">{nft.description}</p>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-400">Token ID: {nft.tokenId}</span>
+                        <span className="text-xs text-gray-500">Token ID: {nft.tokenId}</span>
                         <span className={`text-xs px-2 py-1 rounded-full ${
                           nft.isMinted 
                             ? 'bg-green-100 text-green-800' 
@@ -222,10 +483,10 @@ const Dashboard = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8">
+                <div className="text-center py-12">
                   <RectangleStackIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-300 mb-4">No NFTs found</p>
-                  <button className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors">
+                  <p className="text-gray-500 mb-4">No NFTs found</p>
+                  <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
                     Mint Your First NFT
                   </button>
                 </div>
@@ -233,23 +494,68 @@ const Dashboard = () => {
             </div>
           )}
 
+          {activeTab === 'community' && (
+            <div className="space-y-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Community</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Community Stats</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Total Members</span>
+                      <span className="text-sm font-medium text-gray-900">1,247</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Active Today</span>
+                      <span className="text-sm font-medium text-gray-900">89</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">NFTs Minted</span>
+                      <span className="text-sm font-medium text-gray-900">2,156</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Recent Members</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-8 w-8 bg-blue-500 rounded-full"></div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">John Doe</p>
+                        <p className="text-xs text-gray-500">Joined 2 hours ago</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="h-8 w-8 bg-purple-500 rounded-full"></div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Jane Smith</p>
+                        <p className="text-xs text-gray-500">Joined 4 hours ago</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'settings' && (
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-white">Settings</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Settings</h3>
               <div className="space-y-4">
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-medium mb-2">Account Settings</h4>
-                  <p className="text-gray-300 text-sm">Manage your account preferences and security settings.</p>
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-2">Account Settings</h4>
+                  <p className="text-gray-600 text-sm">Manage your account preferences and security settings.</p>
                 </div>
                 
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-medium mb-2">Privacy</h4>
-                  <p className="text-gray-300 text-sm">Control your privacy and data sharing preferences.</p>
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-2">Privacy</h4>
+                  <p className="text-gray-600 text-sm">Control your privacy and data sharing preferences.</p>
                 </div>
                 
-                <div className="bg-white/5 rounded-lg p-4">
-                  <h4 className="text-white font-medium mb-2">Notifications</h4>
-                  <p className="text-gray-300 text-sm">Configure your notification preferences.</p>
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-2">Notifications</h4>
+                  <p className="text-gray-600 text-sm">Configure your notification preferences.</p>
                 </div>
               </div>
             </div>
