@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const { user, wallet, nfts, logout, loading } = useAuth();
@@ -48,23 +49,43 @@ const Dashboard = () => {
     { id: 'settings', name: 'Settings' }
   ];
 
+  // Custom button styles - Enhanced Glassmorphism Design
+  const buttonStyles = {
+    primary: "glass-button bg-gradient-to-r from-purple-600/90 to-purple-500/90 text-white font-bold py-4 px-10 rounded-2xl shadow-glow-purple hover:shadow-glow transform hover:scale-105 transition-all duration-300",
+    secondary: "glass-button bg-gradient-to-r from-gray-100/90 to-gray-200/90 text-gray-800 font-bold py-3 px-8 rounded-2xl shadow-glow transform hover:scale-105 transition-all duration-300",
+    danger: "glass-button bg-gradient-to-r from-red-500/90 to-pink-500/90 text-white font-bold py-3 px-8 rounded-2xl shadow-glow transform hover:scale-105 transition-all duration-300",
+    success: "glass-button bg-gradient-to-r from-green-500/90 to-emerald-500/90 text-white font-bold py-3 px-8 rounded-2xl shadow-glow transform hover:scale-105 transition-all duration-300",
+    warning: "glass-button bg-gradient-to-r from-orange-500/90 to-yellow-500/90 text-white font-bold py-3 px-8 rounded-2xl shadow-glow transform hover:scale-105 transition-all duration-300",
+    info: "glass-button bg-gradient-to-r from-cyan-500/90 to-blue-500/90 text-white font-bold py-3 px-8 rounded-2xl shadow-glow transform hover:scale-105 transition-all duration-300",
+    tab: "glass-button bg-gradient-to-r from-white/80 to-gray-50/80 text-gray-700 hover:text-blue-700 font-bold py-3 px-6 rounded-2xl shadow-glow transform hover:scale-105 transition-all duration-300",
+    tabActive: "glass-button bg-gradient-to-r from-purple-600/95 to-purple-500/95 text-white font-bold py-3 px-6 rounded-2xl shadow-glow-purple transform scale-105 transition-all duration-300",
+    small: "glass-button bg-gradient-to-r from-purple-500/90 to-purple-400/90 text-white font-bold py-2 px-6 rounded-xl shadow-glow transform hover:scale-105 transition-all duration-300 text-sm"
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      </div>
+      
       {/* Header */}
       <motion.header 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50"
+        className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">ChainClub</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-white">ChainClub</h1>
             </div>
             
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
+            <div className="hidden md:flex items-center space-x-6">
+              <div className="flex items-center space-x-4">
                 <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
                     {user.firstName ? user.firstName[0] : user.email[0].toUpperCase()}
@@ -72,16 +93,16 @@ const Dashboard = () => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                  className={`${buttonStyles.danger} flex items-center gap-2`}
                 >
-                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                  <span className="hidden sm:inline">Logout</span>
+                  <ArrowRightOnRectangleIcon className="w-5 h-5" />
+                  Logout
                 </button>
               </div>
             </div>
 
             {/* Mobile menu button */}
-            <div className="md:hidden flex items-center space-x-2">
+            <div className="md:hidden flex items-center space-x-4">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
@@ -104,7 +125,7 @@ const Dashboard = () => {
               className="md:hidden border-t border-gray-200 py-4"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
                       {user.firstName ? user.firstName[0] : user.email[0].toUpperCase()}
@@ -119,10 +140,10 @@ const Dashboard = () => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
+                  className={`${buttonStyles.danger} flex items-center gap-2 text-sm`}
                 >
-                  <ArrowRightOnRectangleIcon className="h-4 w-4" />
-                  <span>Logout</span>
+                  <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                  Logout
                 </button>
               </div>
             </motion.div>
@@ -138,10 +159,10 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 sm:mb-8"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
             Welcome back, {user.firstName || user.email}!
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base">Manage your Web3 membership and community</p>
+          <p className="text-gray-300 text-sm sm:text-base">Manage your Web3 membership and community</p>
         </motion.div>
 
         {/* Stats Cards */}
@@ -150,7 +171,7 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+            className="glass-card rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center">
               <div className="ml-3 sm:ml-4">
@@ -166,12 +187,12 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+            className="glass-card rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center">
               <div className="ml-3 sm:ml-4">
-                <p className="text-xs sm:text-sm font-medium text-gray-600">NFTs Owned</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">{nfts?.length || 0}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-300">NFTs Owned</p>
+                <p className="text-lg sm:text-2xl font-bold text-white">{nfts?.length || 0}</p>
               </div>
             </div>
           </motion.div>
@@ -180,12 +201,12 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+            className="glass-card rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center">
               <div className="ml-3 sm:ml-4">
-                <p className="text-xs sm:text-sm font-medium text-gray-600">Member Level</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">Level 1</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-300">Member Level</p>
+                <p className="text-lg sm:text-2xl font-bold text-white">Level 1</p>
               </div>
             </div>
           </motion.div>
@@ -194,44 +215,37 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200"
+            className="glass-card rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center">
               <div className="ml-3 sm:ml-4">
-                <p className="text-xs sm:text-sm font-medium text-gray-600">Community Points</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">1,250</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-300">Community Points</p>
+                <p className="text-lg sm:text-2xl font-bold text-white">1,250</p>
               </div>
             </div>
           </motion.div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="mb-6 sm:mb-8">
-          {/* Desktop Tab Navigation */}
-          <nav className="hidden md:flex space-x-1 bg-white rounded-xl p-1 shadow-sm border border-gray-200">
-            {tabs.map((tab) => {
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-blue-500 text-white shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>{tab.name}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Mobile Tab Navigation */}
-          <div className="md:hidden">
+        <div className="mb-8">
+          <div className="hidden md:flex space-x-4 mb-6">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`${activeTab === tab.id ? buttonStyles.tabActive : buttonStyles.tab} flex items-center gap-2`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+          
+          {/* Mobile Tab Select */}
+          <div className="md:hidden mb-4">
             <select
               value={activeTab}
               onChange={(e) => setActiveTab(e.target.value)}
-              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`${buttonStyles.tab} w-full text-left`}
             >
               {tabs.map((tab) => (
                 <option key={tab.id} value={tab.id}>
@@ -248,13 +262,13 @@ const Dashboard = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6"
+          className="glass-card rounded-2xl p-4 sm:p-6"
         >
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Dashboard Overview</h3>
-                <button className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors w-full sm:w-auto">
+                <h3 className="text-lg sm:text-xl font-semibold text-white">Dashboard Overview</h3>
+                <button className={`${buttonStyles.primary} flex items-center gap-2`}>
                   <span>Mint NFT</span>
                 </button>
               </div>
@@ -279,25 +293,17 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
-                  <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Quick Actions</h4>
-                  <div className="space-y-3">
-                    <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm font-medium text-gray-900">View Wallet</span>
-                      </div>
-                    </button>
-                    <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-purple-300 transition-colors">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm font-medium text-gray-900">My NFTs</span>
-                      </div>
-                    </button>
-                    <button className="w-full text-left p-3 bg-white rounded-lg border border-gray-200 hover:border-green-300 transition-colors">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm font-medium text-gray-900">Community</span>
-                      </div>
-                    </button>
-                  </div>
+                {/* Quick Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  <button className={`${buttonStyles.primary} text-center`}>
+                    Mint NFT
+                  </button>
+                  <button className={`${buttonStyles.info} text-center`}>
+                    View Collection
+                  </button>
+                  <button className={`${buttonStyles.success} text-center`}>
+                    Join Community
+                  </button>
                 </div>
               </div>
             </div>
@@ -390,7 +396,13 @@ const Dashboard = () => {
                       <p className="font-mono text-xs sm:text-sm text-gray-600 break-all">
                         {wallet.address}
                       </p>
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium self-start sm:self-auto">
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(wallet.address);
+                          toast.success('Address copied!');
+                        }}
+                        className={`${buttonStyles.secondary} text-sm`}
+                      >
                         Copy
                       </button>
                     </div>
@@ -408,7 +420,7 @@ const Dashboard = () => {
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Your NFTs</h3>
-                <button className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors w-full sm:w-auto">
+                <button className={`${buttonStyles.primary} flex items-center gap-2`}>
                   <span>Mint NFT</span>
                 </button>
               </div>
@@ -437,7 +449,7 @@ const Dashboard = () => {
               ) : (
                 <div className="text-center py-12">
                   <p className="text-gray-500 mb-4">No NFTs found</p>
-                  <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                  <button className={`${buttonStyles.primary} flex items-center gap-2`}>
                     Mint Your First NFT
                   </button>
                 </div>
@@ -447,7 +459,17 @@ const Dashboard = () => {
 
           {activeTab === 'community' && (
             <div className="space-y-6">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Community</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Community</h3>
+                <div className="flex gap-4">
+                  <button className={`${buttonStyles.success} text-sm`}>
+                    Join Discord
+                  </button>
+                  <button className={`${buttonStyles.info} text-sm`}>
+                    View Events
+                  </button>
+                </div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
                   <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4">Community Stats</h4>
@@ -492,7 +514,17 @@ const Dashboard = () => {
 
           {activeTab === 'settings' && (
             <div className="space-y-6">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Settings</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Settings</h3>
+                <div className="flex gap-4">
+                  <button className={`${buttonStyles.secondary} text-sm`}>
+                    Save Changes
+                  </button>
+                  <button className={`${buttonStyles.warning} text-sm`}>
+                    Export Data
+                  </button>
+                </div>
+              </div>
               <div className="space-y-4">
                 <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
                   <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-2">Account Settings</h4>

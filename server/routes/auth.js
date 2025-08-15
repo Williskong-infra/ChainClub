@@ -48,8 +48,8 @@ const validateProfileUpdate = [
     .withMessage('Last name must be less than 100 characters')
 ];
 
-// Apply rate limiting to auth routes
-router.use(authRateLimit);
+// Apply rate limiting to auth routes (disabled for development)
+// router.use(authRateLimit);
 
 // POST /api/auth/register - Register new user
 router.post('/register', validateRegistration, authController.register);

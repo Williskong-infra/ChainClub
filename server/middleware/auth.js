@@ -104,9 +104,12 @@ const optionalAuth = async (req, res, next) => {
 // Rate limiting middleware
 const rateLimit = require('express-rate-limit');
 
+// Development-friendly rate limits
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const authRateLimit = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_AUTH_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_AUTH_MAX_REQUESTS) || 5, // 5 requests per window
+  max: parseInt(process.env.RATE_LIMIT_AUTH_MAX_REQUESTS) || (isDevelopment ? 200 : 50), // 200 in dev, 50 in prod
   message: {
     success: false,
     message: 'Too many authentication attempts, please try again later'
@@ -117,7 +120,7 @@ const authRateLimit = rateLimit({
 
 const apiRateLimit = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // 100 requests per window
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || (isDevelopment ? 5000 : 1000), // 5000 in dev, 1000 in prod
   message: {
     success: false,
     message: 'Too many requests, please try again later'
